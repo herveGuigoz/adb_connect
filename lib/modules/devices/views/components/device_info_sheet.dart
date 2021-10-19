@@ -42,10 +42,11 @@ class DeviceInfoSheet extends ConsumerWidget {
               title: 'Serial number',
               subtitle: device.serialNumber,
             ),
-            InfoListTile(
-              title: 'Adress',
-              subtitle: '${device.address.ip}:${device.port}',
-            ),
+            if (device.address != null)
+              InfoListTile(
+                title: 'Adress',
+                subtitle: '${device.address!.ip}:${device.port}',
+              ),
           ],
         ),
       ),

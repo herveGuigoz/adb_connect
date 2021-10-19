@@ -10,9 +10,17 @@ class CommandHistory extends StateNotifier<List<LogEntry>>
   static int capacity = 100;
 
   @override
-  void didRun(LogEntry entry) {
-    final logEntries = [...state, entry];
-    state = ensureCapacity(logEntries);
+  void didStart(LogEntry entry) => add(entry);
+
+  @override
+  void didRun(LogEntry entry) => add(entry);
+
+  @protected
+  void add(LogEntry entry) {
+    if (entry.value.isNotEmpty) {
+      final logEntries = [...state, entry];
+      state = ensureCapacity(logEntries);
+    }
   }
 
   void clear() {

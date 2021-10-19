@@ -6,7 +6,7 @@ part 'models.freezed.dart';
 class Device with _$Device {
   const factory Device({
     required String id,
-    required Address address,
+    Address? address,
     required int port,
     required String model,
     required String manufacturer,
@@ -24,7 +24,11 @@ class Device with _$Device {
   bool get isUsb => connectionType is Usb;
   bool get isWifi => connectionType is Wifi;
   String get subtitle {
-    return 'Android $androidVersion (API $apiLevel) - ${address.ip}:$port';
+    if (address != null) {
+      return 'Android $androidVersion (API $apiLevel) - ${address!.ip}:$port';
+    }
+
+    return 'Android $androidVersion (API $apiLevel)';
   }
 }
 

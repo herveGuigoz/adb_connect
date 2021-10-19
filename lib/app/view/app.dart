@@ -1,7 +1,7 @@
 import 'package:adb_connect/app/view/components/components.dart';
 import 'package:adb_connect/l10n/l10n.dart';
+import 'package:adb_connect/modules/console/console.dart';
 import 'package:adb_connect/modules/devices/devices.dart';
-import 'package:adb_connect/modules/logs/logs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -38,21 +38,16 @@ class MainLayout extends ConsumerWidget {
     return AppScaffold(
       titleBar: TitleBar(
         actions: [
-          // TitleBarAction(
-          //   semanticLabel: 'Add device',
-          //   icon: const MacosIcon(CupertinoIcons.badge_plus_radiowaves_right),
-          //   onPressed: () {/* todo */},
-          // ),
           TitleBarAction(
             semanticLabel: 'Restart ADB',
             icon: const MacosIcon(CupertinoIcons.clear),
             onPressed: ref.restartAdb,
           ),
-          TitleBarAction(
-            semanticLabel: 'Refresh',
-            icon: const MacosIcon(CupertinoIcons.refresh),
-            onPressed: ref.refreshDevices,
-          ),
+          // TitleBarAction(
+          //   semanticLabel: 'Refresh',
+          //   icon: const MacosIcon(CupertinoIcons.refresh),
+          //   onPressed: ref.refreshDevices,
+          // ),
         ],
       ),
       body: const DevicesLayout(),

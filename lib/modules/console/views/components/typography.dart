@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:macos_ui/macos_ui.dart';
 
-/// Stdout text
 class ConsoleText extends StatelessWidget {
   const ConsoleText(this.entry, {Key? key}) : super(key: key);
 
@@ -11,15 +10,9 @@ class ConsoleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Log(
-          "> ${entry.command.executable} ${entry.command.arguments.join(' ')}",
-        ),
-        for (final log in entry.result.output) Log(log)
-      ],
+    return entry.maybeWhen(
+      command: (value) => Log('> $value'),
+      orElse: () => Log(entry.value),
     );
   }
 }

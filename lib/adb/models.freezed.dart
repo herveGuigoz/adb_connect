@@ -19,7 +19,7 @@ class _$DeviceTearOff {
 
   _Device call(
       {required String id,
-      required Address address,
+      Address? address,
       required int port,
       required String model,
       required String manufacturer,
@@ -49,7 +49,7 @@ const $Device = _$DeviceTearOff();
 /// @nodoc
 mixin _$Device {
   String get id => throw _privateConstructorUsedError;
-  Address get address => throw _privateConstructorUsedError;
+  Address? get address => throw _privateConstructorUsedError;
   int get port => throw _privateConstructorUsedError;
   String get model => throw _privateConstructorUsedError;
   String get manufacturer => throw _privateConstructorUsedError;
@@ -69,7 +69,7 @@ abstract class $DeviceCopyWith<$Res> {
       _$DeviceCopyWithImpl<$Res>;
   $Res call(
       {String id,
-      Address address,
+      Address? address,
       int port,
       String model,
       String manufacturer,
@@ -79,7 +79,7 @@ abstract class $DeviceCopyWith<$Res> {
       Connection connectionType,
       bool isPinnedDevice});
 
-  $AddressCopyWith<$Res> get address;
+  $AddressCopyWith<$Res>? get address;
   $ConnectionCopyWith<$Res> get connectionType;
 }
 
@@ -112,7 +112,7 @@ class _$DeviceCopyWithImpl<$Res> implements $DeviceCopyWith<$Res> {
       address: address == freezed
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
-              as Address,
+              as Address?,
       port: port == freezed
           ? _value.port
           : port // ignore: cast_nullable_to_non_nullable
@@ -149,8 +149,12 @@ class _$DeviceCopyWithImpl<$Res> implements $DeviceCopyWith<$Res> {
   }
 
   @override
-  $AddressCopyWith<$Res> get address {
-    return $AddressCopyWith<$Res>(_value.address, (value) {
+  $AddressCopyWith<$Res>? get address {
+    if (_value.address == null) {
+      return null;
+    }
+
+    return $AddressCopyWith<$Res>(_value.address!, (value) {
       return _then(_value.copyWith(address: value));
     });
   }
@@ -170,7 +174,7 @@ abstract class _$DeviceCopyWith<$Res> implements $DeviceCopyWith<$Res> {
   @override
   $Res call(
       {String id,
-      Address address,
+      Address? address,
       int port,
       String model,
       String manufacturer,
@@ -181,7 +185,7 @@ abstract class _$DeviceCopyWith<$Res> implements $DeviceCopyWith<$Res> {
       bool isPinnedDevice});
 
   @override
-  $AddressCopyWith<$Res> get address;
+  $AddressCopyWith<$Res>? get address;
   @override
   $ConnectionCopyWith<$Res> get connectionType;
 }
@@ -216,7 +220,7 @@ class __$DeviceCopyWithImpl<$Res> extends _$DeviceCopyWithImpl<$Res>
       address: address == freezed
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
-              as Address,
+              as Address?,
       port: port == freezed
           ? _value.port
           : port // ignore: cast_nullable_to_non_nullable
@@ -258,7 +262,7 @@ class __$DeviceCopyWithImpl<$Res> extends _$DeviceCopyWithImpl<$Res>
 class _$_Device extends _Device {
   const _$_Device(
       {required this.id,
-      required this.address,
+      this.address,
       required this.port,
       required this.model,
       required this.manufacturer,
@@ -272,7 +276,7 @@ class _$_Device extends _Device {
   @override
   final String id;
   @override
-  final Address address;
+  final Address? address;
   @override
   final int port;
   @override
@@ -342,7 +346,7 @@ class _$_Device extends _Device {
 abstract class _Device extends Device {
   const factory _Device(
       {required String id,
-      required Address address,
+      Address? address,
       required int port,
       required String model,
       required String manufacturer,
@@ -356,7 +360,7 @@ abstract class _Device extends Device {
   @override
   String get id;
   @override
-  Address get address;
+  Address? get address;
   @override
   int get port;
   @override

@@ -1,5 +1,4 @@
 import 'package:adb_connect/adb/models.dart';
-import 'package:adb_connect/modules/devices/logic/adb_service.dart';
 import 'package:adb_connect/modules/devices/logic/providers.dart';
 import 'package:adb_connect/modules/devices/views/components/components.dart';
 import 'package:flutter/cupertino.dart';
@@ -93,7 +92,7 @@ class DeviceListTile extends ConsumerWidget {
             PushButton(
               buttonSize: ButtonSize.small,
               onPressed: device.isUsb
-                  ? isConnected
+                  ? isConnected || device.address == null
                       ? null
                       : () => ref.connectDevice(device)
                   : () => ref.disconnectDevice(device),

@@ -258,8 +258,9 @@ class __$CommandResultCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CommandResult implements _CommandResult {
-  const _$_CommandResult({required this.exitCode, required this.output});
+class _$_CommandResult extends _CommandResult {
+  const _$_CommandResult({required this.exitCode, required this.output})
+      : super._();
 
   @override
   final int exitCode;
@@ -291,9 +292,10 @@ class _$_CommandResult implements _CommandResult {
       __$CommandResultCopyWithImpl<_CommandResult>(this, _$identity);
 }
 
-abstract class _CommandResult implements CommandResult {
+abstract class _CommandResult extends CommandResult {
   const factory _CommandResult(
       {required int exitCode, required List<String> output}) = _$_CommandResult;
+  const _CommandResult._() : super._();
 
   @override
   int get exitCode;
@@ -309,10 +311,21 @@ abstract class _CommandResult implements CommandResult {
 class _$LogEntryTearOff {
   const _$LogEntryTearOff();
 
-  _LogEntry call({required Command command, required CommandResult result}) {
-    return _LogEntry(
-      command: command,
-      result: result,
+  _CommandLogEntry command({required String value}) {
+    return _CommandLogEntry(
+      value: value,
+    );
+  }
+
+  _StdrLogEntry stderr({required String value}) {
+    return _StdrLogEntry(
+      value: value,
+    );
+  }
+
+  _StdoutLogEntry stdout({required String value}) {
+    return _StdoutLogEntry(
+      value: value,
     );
   }
 }
@@ -322,8 +335,52 @@ const $LogEntry = _$LogEntryTearOff();
 
 /// @nodoc
 mixin _$LogEntry {
-  Command get command => throw _privateConstructorUsedError;
-  CommandResult get result => throw _privateConstructorUsedError;
+  String get value => throw _privateConstructorUsedError;
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String value) command,
+    required TResult Function(String value) stderr,
+    required TResult Function(String value) stdout,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_CommandLogEntry value) command,
+    required TResult Function(_StdrLogEntry value) stderr,
+    required TResult Function(_StdoutLogEntry value) stdout,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $LogEntryCopyWith<LogEntry> get copyWith =>
@@ -334,10 +391,7 @@ mixin _$LogEntry {
 abstract class $LogEntryCopyWith<$Res> {
   factory $LogEntryCopyWith(LogEntry value, $Res Function(LogEntry) then) =
       _$LogEntryCopyWithImpl<$Res>;
-  $Res call({Command command, CommandResult result});
-
-  $CommandCopyWith<$Res> get command;
-  $CommandResultCopyWith<$Res> get result;
+  $Res call({String value});
 }
 
 /// @nodoc
@@ -350,119 +404,438 @@ class _$LogEntryCopyWithImpl<$Res> implements $LogEntryCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? command = freezed,
-    Object? result = freezed,
+    Object? value = freezed,
   }) {
     return _then(_value.copyWith(
-      command: command == freezed
-          ? _value.command
-          : command // ignore: cast_nullable_to_non_nullable
-              as Command,
-      result: result == freezed
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as CommandResult,
+      value: value == freezed
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
-
-  @override
-  $CommandCopyWith<$Res> get command {
-    return $CommandCopyWith<$Res>(_value.command, (value) {
-      return _then(_value.copyWith(command: value));
-    });
-  }
-
-  @override
-  $CommandResultCopyWith<$Res> get result {
-    return $CommandResultCopyWith<$Res>(_value.result, (value) {
-      return _then(_value.copyWith(result: value));
-    });
-  }
 }
 
 /// @nodoc
-abstract class _$LogEntryCopyWith<$Res> implements $LogEntryCopyWith<$Res> {
-  factory _$LogEntryCopyWith(_LogEntry value, $Res Function(_LogEntry) then) =
-      __$LogEntryCopyWithImpl<$Res>;
+abstract class _$CommandLogEntryCopyWith<$Res>
+    implements $LogEntryCopyWith<$Res> {
+  factory _$CommandLogEntryCopyWith(
+          _CommandLogEntry value, $Res Function(_CommandLogEntry) then) =
+      __$CommandLogEntryCopyWithImpl<$Res>;
   @override
-  $Res call({Command command, CommandResult result});
-
-  @override
-  $CommandCopyWith<$Res> get command;
-  @override
-  $CommandResultCopyWith<$Res> get result;
+  $Res call({String value});
 }
 
 /// @nodoc
-class __$LogEntryCopyWithImpl<$Res> extends _$LogEntryCopyWithImpl<$Res>
-    implements _$LogEntryCopyWith<$Res> {
-  __$LogEntryCopyWithImpl(_LogEntry _value, $Res Function(_LogEntry) _then)
-      : super(_value, (v) => _then(v as _LogEntry));
+class __$CommandLogEntryCopyWithImpl<$Res> extends _$LogEntryCopyWithImpl<$Res>
+    implements _$CommandLogEntryCopyWith<$Res> {
+  __$CommandLogEntryCopyWithImpl(
+      _CommandLogEntry _value, $Res Function(_CommandLogEntry) _then)
+      : super(_value, (v) => _then(v as _CommandLogEntry));
 
   @override
-  _LogEntry get _value => super._value as _LogEntry;
+  _CommandLogEntry get _value => super._value as _CommandLogEntry;
 
   @override
   $Res call({
-    Object? command = freezed,
-    Object? result = freezed,
+    Object? value = freezed,
   }) {
-    return _then(_LogEntry(
-      command: command == freezed
-          ? _value.command
-          : command // ignore: cast_nullable_to_non_nullable
-              as Command,
-      result: result == freezed
-          ? _value.result
-          : result // ignore: cast_nullable_to_non_nullable
-              as CommandResult,
+    return _then(_CommandLogEntry(
+      value: value == freezed
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_LogEntry implements _LogEntry {
-  const _$_LogEntry({required this.command, required this.result});
+class _$_CommandLogEntry implements _CommandLogEntry {
+  const _$_CommandLogEntry({required this.value});
 
   @override
-  final Command command;
-  @override
-  final CommandResult result;
+  final String value;
 
   @override
   String toString() {
-    return 'LogEntry(command: $command, result: $result)';
+    return 'LogEntry.command(value: $value)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _LogEntry &&
-            (identical(other.command, command) || other.command == command) &&
-            (identical(other.result, result) || other.result == result));
+            other is _CommandLogEntry &&
+            (identical(other.value, value) || other.value == value));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, command, result);
+  int get hashCode => Object.hash(runtimeType, value);
 
   @JsonKey(ignore: true)
   @override
-  _$LogEntryCopyWith<_LogEntry> get copyWith =>
-      __$LogEntryCopyWithImpl<_LogEntry>(this, _$identity);
+  _$CommandLogEntryCopyWith<_CommandLogEntry> get copyWith =>
+      __$CommandLogEntryCopyWithImpl<_CommandLogEntry>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String value) command,
+    required TResult Function(String value) stderr,
+    required TResult Function(String value) stdout,
+  }) {
+    return command(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+  }) {
+    return command?.call(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+    required TResult orElse(),
+  }) {
+    if (command != null) {
+      return command(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_CommandLogEntry value) command,
+    required TResult Function(_StdrLogEntry value) stderr,
+    required TResult Function(_StdoutLogEntry value) stdout,
+  }) {
+    return command(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+  }) {
+    return command?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+    required TResult orElse(),
+  }) {
+    if (command != null) {
+      return command(this);
+    }
+    return orElse();
+  }
 }
 
-abstract class _LogEntry implements LogEntry {
-  const factory _LogEntry(
-      {required Command command, required CommandResult result}) = _$_LogEntry;
+abstract class _CommandLogEntry implements LogEntry {
+  const factory _CommandLogEntry({required String value}) = _$_CommandLogEntry;
 
   @override
-  Command get command;
-  @override
-  CommandResult get result;
+  String get value;
   @override
   @JsonKey(ignore: true)
-  _$LogEntryCopyWith<_LogEntry> get copyWith =>
+  _$CommandLogEntryCopyWith<_CommandLogEntry> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$StdrLogEntryCopyWith<$Res> implements $LogEntryCopyWith<$Res> {
+  factory _$StdrLogEntryCopyWith(
+          _StdrLogEntry value, $Res Function(_StdrLogEntry) then) =
+      __$StdrLogEntryCopyWithImpl<$Res>;
+  @override
+  $Res call({String value});
+}
+
+/// @nodoc
+class __$StdrLogEntryCopyWithImpl<$Res> extends _$LogEntryCopyWithImpl<$Res>
+    implements _$StdrLogEntryCopyWith<$Res> {
+  __$StdrLogEntryCopyWithImpl(
+      _StdrLogEntry _value, $Res Function(_StdrLogEntry) _then)
+      : super(_value, (v) => _then(v as _StdrLogEntry));
+
+  @override
+  _StdrLogEntry get _value => super._value as _StdrLogEntry;
+
+  @override
+  $Res call({
+    Object? value = freezed,
+  }) {
+    return _then(_StdrLogEntry(
+      value: value == freezed
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_StdrLogEntry implements _StdrLogEntry {
+  const _$_StdrLogEntry({required this.value});
+
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'LogEntry.stderr(value: $value)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _StdrLogEntry &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, value);
+
+  @JsonKey(ignore: true)
+  @override
+  _$StdrLogEntryCopyWith<_StdrLogEntry> get copyWith =>
+      __$StdrLogEntryCopyWithImpl<_StdrLogEntry>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String value) command,
+    required TResult Function(String value) stderr,
+    required TResult Function(String value) stdout,
+  }) {
+    return stderr(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+  }) {
+    return stderr?.call(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+    required TResult orElse(),
+  }) {
+    if (stderr != null) {
+      return stderr(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_CommandLogEntry value) command,
+    required TResult Function(_StdrLogEntry value) stderr,
+    required TResult Function(_StdoutLogEntry value) stdout,
+  }) {
+    return stderr(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+  }) {
+    return stderr?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+    required TResult orElse(),
+  }) {
+    if (stderr != null) {
+      return stderr(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _StdrLogEntry implements LogEntry {
+  const factory _StdrLogEntry({required String value}) = _$_StdrLogEntry;
+
+  @override
+  String get value;
+  @override
+  @JsonKey(ignore: true)
+  _$StdrLogEntryCopyWith<_StdrLogEntry> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$StdoutLogEntryCopyWith<$Res>
+    implements $LogEntryCopyWith<$Res> {
+  factory _$StdoutLogEntryCopyWith(
+          _StdoutLogEntry value, $Res Function(_StdoutLogEntry) then) =
+      __$StdoutLogEntryCopyWithImpl<$Res>;
+  @override
+  $Res call({String value});
+}
+
+/// @nodoc
+class __$StdoutLogEntryCopyWithImpl<$Res> extends _$LogEntryCopyWithImpl<$Res>
+    implements _$StdoutLogEntryCopyWith<$Res> {
+  __$StdoutLogEntryCopyWithImpl(
+      _StdoutLogEntry _value, $Res Function(_StdoutLogEntry) _then)
+      : super(_value, (v) => _then(v as _StdoutLogEntry));
+
+  @override
+  _StdoutLogEntry get _value => super._value as _StdoutLogEntry;
+
+  @override
+  $Res call({
+    Object? value = freezed,
+  }) {
+    return _then(_StdoutLogEntry(
+      value: value == freezed
+          ? _value.value
+          : value // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_StdoutLogEntry implements _StdoutLogEntry {
+  const _$_StdoutLogEntry({required this.value});
+
+  @override
+  final String value;
+
+  @override
+  String toString() {
+    return 'LogEntry.stdout(value: $value)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _StdoutLogEntry &&
+            (identical(other.value, value) || other.value == value));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, value);
+
+  @JsonKey(ignore: true)
+  @override
+  _$StdoutLogEntryCopyWith<_StdoutLogEntry> get copyWith =>
+      __$StdoutLogEntryCopyWithImpl<_StdoutLogEntry>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String value) command,
+    required TResult Function(String value) stderr,
+    required TResult Function(String value) stdout,
+  }) {
+    return stdout(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+  }) {
+    return stdout?.call(value);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String value)? command,
+    TResult Function(String value)? stderr,
+    TResult Function(String value)? stdout,
+    required TResult orElse(),
+  }) {
+    if (stdout != null) {
+      return stdout(value);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_CommandLogEntry value) command,
+    required TResult Function(_StdrLogEntry value) stderr,
+    required TResult Function(_StdoutLogEntry value) stdout,
+  }) {
+    return stdout(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+  }) {
+    return stdout?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_CommandLogEntry value)? command,
+    TResult Function(_StdrLogEntry value)? stderr,
+    TResult Function(_StdoutLogEntry value)? stdout,
+    required TResult orElse(),
+  }) {
+    if (stdout != null) {
+      return stdout(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _StdoutLogEntry implements LogEntry {
+  const factory _StdoutLogEntry({required String value}) = _$_StdoutLogEntry;
+
+  @override
+  String get value;
+  @override
+  @JsonKey(ignore: true)
+  _$StdoutLogEntryCopyWith<_StdoutLogEntry> get copyWith =>
       throw _privateConstructorUsedError;
 }

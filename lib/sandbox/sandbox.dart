@@ -240,8 +240,13 @@ Future<void> isolateEntryPoint(IsolateInitParams params) async {
 
       sendPort.send(result);
     } catch (error) {
-      // todo send stderr ?
-      sendPort.send(RemoteExecutionError(error.toString(), task.capability));
+      final result = TaskResult(
+        result: CommandResult(exitCode: 1, output: [error.toString()]),
+        capability: task.capability,
+      );
+
+      sendPort.send(result);
+      // sendPort.send(RemoteExecutionError(error.toString(), task.capability));
     }
   }
 }

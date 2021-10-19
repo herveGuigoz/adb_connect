@@ -1,8 +1,7 @@
 import 'package:adb_connect/adb/adb.dart';
-
 import 'package:adb_connect/adb/models.dart';
+import 'package:adb_connect/modules/console/logic/providers.dart';
 import 'package:adb_connect/modules/devices/logic/adb_service.dart';
-import 'package:adb_connect/modules/logs/logic/providers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,7 +23,7 @@ final isDeviceConnectedProvider = Provider.family<bool, Device>((ref, it) {
 
 extension AdbActions on WidgetRef {
   Future<void> refreshDevices() {
-    return read(adbServiceProvider.notifier).refreshDevices();
+    return read(adbServiceProvider.notifier).loadDevices();
   }
 
   Future<void> restartAdb() {
