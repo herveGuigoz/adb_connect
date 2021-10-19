@@ -122,6 +122,17 @@ Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info
     }
 }
 ```
+
+---
+
+## Create dmg
+
+```bash
+flutter build macos --release && sh scripts/create_mac_dmg.sh
+```
+
+see [create-dmg](https://github.com/create-dmg/create-dmg)
+
 ---
 
 ## Todo
