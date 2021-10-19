@@ -129,7 +129,6 @@ Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info
 - Setting for user path
 - Assert adb is enable (which adb)
 - Errors handling
-- Refresh devices list
 - Scrappy
 - [process_run](https://github.com/tekartik/process_run.dart) implementation ?
 

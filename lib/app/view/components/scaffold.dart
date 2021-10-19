@@ -39,7 +39,7 @@ class _AppScaffoldState extends State<AppScaffold> {
   @override
   Widget build(BuildContext context) {
     final theme = MacosTheme.of(context);
-    // 480 x 582
+
     return LayoutBuilder(
       builder: (context, constraints) {
         return Stack(
