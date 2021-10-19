@@ -21,3 +21,21 @@ final isDeviceConnectedProvider = Provider.family<bool, Device>((ref, it) {
           device.serialNumber == it.serialNumber &&
           device.address == it.address);
 });
+
+extension AdbActions on WidgetRef {
+  Future<void> refreshDevices() {
+    return read(adbServiceProvider.notifier).refreshDevices();
+  }
+
+  Future<void> restartAdb() {
+    return read(adbServiceProvider.notifier).restartAdb();
+  }
+
+  Future<void> connectDevice(Device device) {
+    return read(adbServiceProvider.notifier).connectDevice(device);
+  }
+
+  Future<void> disconnectDevice(Device device) {
+    return read(adbServiceProvider.notifier).disconnectDevice(device);
+  }
+}

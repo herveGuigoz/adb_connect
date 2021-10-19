@@ -29,7 +29,7 @@ class _LogsLayoutState extends ConsumerState<LogsLayout> {
       menuItems: [
         MenuItem(
           title: 'Clear',
-          onSelected: () => ref.read(logsProvider.notifier).clear(),
+          onSelected: ref.clearLogs,
         ),
       ],
       child: CupertinoScrollbar(
