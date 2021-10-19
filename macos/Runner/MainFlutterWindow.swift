@@ -7,6 +7,8 @@ class MainFlutterWindow: NSWindow {
     let windowFrame = self.frame
     self.contentViewController = flutterViewController
     self.setFrame(windowFrame, display: true)
+    // Opinioned min windows size 
+    self.minSize = CGSize(width: CGFloat(480), height: CGFloat(580))
 
     if #available(macOS 10.13, *) {
       let customToolbar = NSToolbar()
