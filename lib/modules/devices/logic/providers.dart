@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final adbServiceProvider = StateNotifierProvider<AdbService, List<Device>>(
   (ref) => AdbService(Adb(
-    workersCount: 2,
     verbose: kDebugMode,
     observers: [ref.read(logsProvider.notifier)],
   )),
