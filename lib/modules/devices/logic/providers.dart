@@ -1,15 +1,10 @@
-import 'package:adb_connect/adb/adb.dart';
 import 'package:adb_connect/adb/models.dart';
-import 'package:adb_connect/modules/console/logic/providers.dart';
+import 'package:adb_connect/adb/providers.dart';
 import 'package:adb_connect/modules/devices/logic/adb_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final adbServiceProvider = StateNotifierProvider<AdbService, List<Device>>(
-  (ref) => AdbService(Adb(
-    verbose: kDebugMode,
-    observers: [ref.read(logsProvider.notifier)],
-  )),
+  (ref) => AdbService(ref.watch(adbProvider)),
 );
 
 final isDeviceConnectedProvider = Provider.family<bool, Device>((ref, it) {
@@ -21,7 +16,7 @@ final isDeviceConnectedProvider = Provider.family<bool, Device>((ref, it) {
 });
 
 extension AdbActions on WidgetRef {
-  Future<void> refreshDevices() {
+  Future<void> loadDevices() {
     return read(adbServiceProvider.notifier).loadDevices();
   }
 

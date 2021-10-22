@@ -1,3 +1,4 @@
+import 'package:adb_connect/app/providers.dart';
 import 'package:adb_connect/app/view/components/components.dart';
 import 'package:adb_connect/l10n/l10n.dart';
 import 'package:adb_connect/modules/console/console.dart';
@@ -35,23 +36,38 @@ class MainLayout extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return AppScaffold(
-      titleBar: TitleBar(
-        actions: [
-          TitleBarAction(
-            semanticLabel: 'Restart ADB',
-            icon: const MacosIcon(CupertinoIcons.clear),
-            onPressed: ref.restartAdb,
-          ),
-          // TitleBarAction(
-          //   semanticLabel: 'Refresh',
-          //   icon: const MacosIcon(CupertinoIcons.refresh),
-          //   onPressed: ref.refreshDevices,
-          // ),
-        ],
+    final theme = MacosTheme.of(context);
+    final appState = ref.watch(appStateProvider);
+
+    return appState.when(
+      data: (_) => AppScaffold(
+        titleBar: TitleBar(
+          actions: [
+            TitleBarAction(
+              semanticLabel: 'Restart ADB',
+              icon: const MacosIcon(CupertinoIcons.clear),
+              onPressed: ref.restartAdb,
+            ),
+            // TitleBarAction(
+            //   semanticLabel: 'Refresh',
+            //   icon: const MacosIcon(CupertinoIcons.refresh),
+            //   onPressed: ref.loadDevices,
+            // ),
+          ],
+        ),
+        body: const DevicesLayout(),
+        console: const LogsLayout(),
       ),
-      body: const DevicesLayout(),
-      console: const LogsLayout(),
+      loading: (_) => Container(
+        color: theme.canvasColor,
+        alignment: Alignment.center,
+        child: const ProgressCircle(),
+      ),
+      error: (error, stackTrace, _) => Container(
+        color: theme.canvasColor,
+        alignment: Alignment.center,
+        child: Text(error.toString()),
+      ),
     );
   }
 }

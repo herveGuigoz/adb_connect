@@ -25,7 +25,13 @@ class Adb extends CommandExecutor with CommandsMixin {
 
   @override
   Future<CommandResult> exec(Command command) async {
-    final result = await sandbox.run(command);
+    late final CommandResult result;
+
+    try {
+      result = await sandbox.run(command);
+    } on RemoteExecutionError catch (error) {
+      result = CommandResult(exitCode: 1, output: [error.toString()]);
+    }
 
     return result;
   }

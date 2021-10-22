@@ -12,9 +12,7 @@ class DevicesManager extends StateNotifier<List<Device>> {
 }
 
 class AdbService extends DevicesManager with PoolingMixin {
-  AdbService(this.adb) {
-    loadDevices();
-  }
+  AdbService(this.adb);
 
   @override
   @protected
@@ -47,7 +45,6 @@ class AdbService extends DevicesManager with PoolingMixin {
   @override
   void dispose() {
     _timer?.cancel();
-    Future.sync(adb.dispose);
     super.dispose();
   }
 }
