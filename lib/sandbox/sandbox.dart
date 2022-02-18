@@ -25,7 +25,7 @@ enum WorkerStatus { idle, processing }
 /// Class, that provides `compute` like API for concurrent commands run
 class Sanbox {
   Sanbox({this.workersCount = 2, bool verbose = false})
-      : assert(workersCount > 0),
+      : assert(workersCount > 0, 'Missing worker count'),
         logger = Logger(enabled: verbose);
 
   final int workersCount;
@@ -89,10 +89,12 @@ class Sanbox {
     }
     _activeTaskCompleters.forEach((taskCapability, completer) {
       if (!completer.isCompleted) {
-        completer.completeError(RemoteExecutionError(
-          'Canceled because of computer turn off',
-          taskCapability,
-        ));
+        completer.completeError(
+          RemoteExecutionError(
+            'Canceled because of computer turn off',
+            taskCapability,
+          ),
+        );
       }
     });
     _activeTaskCompleters.clear();

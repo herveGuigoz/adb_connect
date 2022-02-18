@@ -2,7 +2,6 @@ import 'package:adb_connect/adb/models.dart';
 import 'package:adb_connect/modules/devices/logic/providers.dart';
 import 'package:adb_connect/modules/devices/views/components/components.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
 

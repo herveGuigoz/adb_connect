@@ -4,7 +4,6 @@ import 'package:adb_connect/l10n/l10n.dart';
 import 'package:adb_connect/modules/console/console.dart';
 import 'package:adb_connect/modules/devices/devices.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -39,7 +38,7 @@ class MainLayout extends ConsumerWidget {
     final theme = MacosTheme.of(context);
     final appState = ref.watch(appStateProvider);
 
-    return appState.when(
+    return appState.map(
       data: (_) => AppScaffold(
         titleBar: TitleBar(
           actions: [
@@ -63,10 +62,10 @@ class MainLayout extends ConsumerWidget {
         alignment: Alignment.center,
         child: const ProgressCircle(),
       ),
-      error: (error, stackTrace, _) => Container(
+      error: (_) => Container(
         color: theme.canvasColor,
         alignment: Alignment.center,
-        child: Text(error.toString()),
+        child: Text(_.error.toString()),
       ),
     );
   }

@@ -78,26 +78,29 @@ abstract class CommandsObserver {
 mixin CommandsMixin on CommandExecutor {
   Future<CommandResult> connect(Device device) async {
     if (device.isUsb) {
-      await execAndLog(Command.rawString(
-        'adb -s ${device.id} tcpip ${device.port}',
-      ));
+      await execAndLog(
+        Command.rawString('adb -s ${device.id} tcpip ${device.port}'),
+      );
 
       // wait to avoid `connection refused` error
       await Future.delayed(const Duration(seconds: 2), () {});
     }
 
-    assert(device.address != null, 'Could not connect device, ip is unknow');
+    assert(device.address != null, 'Could not connect device, ip is unknown');
 
-    return execAndLog(Command.rawString(
-      'adb connect ${device.address!.ip}:${device.port}',
-    ));
+    return execAndLog(
+      Command.rawString('adb connect ${device.address!.ip}:${device.port}'),
+    );
   }
 
   Future<CommandResult> disconnect(Device device) {
-    assert(device.address != null, 'Could not disconnect device, ip is unknow');
-    return execAndLog(Command.rawString(
-      'adb disconnect ${device.address!.ip}:${device.port}',
-    ));
+    assert(
+      device.address != null,
+      'Could not disconnect device, ip is unknown',
+    );
+    return execAndLog(
+      Command.rawString('adb disconnect ${device.address!.ip}:${device.port}'),
+    );
   }
 
   Future<CommandResult> disconnectAllDevices() {
@@ -122,11 +125,11 @@ mixin CommandsMixin on CommandExecutor {
         .mapNotNull((line) => AdbRegex.deviceId.firstMatch(line)?.group(1));
 
     for (final id in devicesIds) {
-      final ipAdressOrNull = AdbRegex.ipAdress.firstMatch(id);
-      final ip = ipAdressOrNull?.group(1);
-      final port = ipAdressOrNull?.group(2)?.toInt();
+      final ipAddressOrNull = AdbRegex.ipAddress.firstMatch(id);
+      final ip = ipAddressOrNull?.group(1);
+      final port = ipAddressOrNull?.group(2)?.toInt();
 
-      final connectionType = ipAdressOrNull != null
+      final connectionType = ipAddressOrNull != null
           ? const Connection.wifi()
           : const Connection.usb();
 
@@ -144,65 +147,73 @@ mixin CommandsMixin on CommandExecutor {
         apiLevel(id),
       ]);
 
-      devices.add(Device(
-        id: id,
-        address: address,
-        port: port ?? adbDefaultPort,
-        model: futures[0],
-        manufacturer: futures[1],
-        serialNumber: futures[2],
-        androidVersion: futures[3],
-        apiLevel: futures[4],
-        connectionType: connectionType,
-      ));
+      devices.add(
+        Device(
+          id: id,
+          address: address,
+          port: port ?? adbDefaultPort,
+          model: futures[0],
+          manufacturer: futures[1],
+          serialNumber: futures[2],
+          androidVersion: futures[3],
+          apiLevel: futures[4],
+          connectionType: connectionType,
+        ),
+      );
     }
 
     return devices;
   }
 
   Future<Address?> addressOrNull(String deviceId) async {
-    final result = await exec(Command.rawString(
-      'adb -s $deviceId shell ip route',
-    ));
+    final result = await exec(
+      Command.rawString('adb -s $deviceId shell ip route'),
+    );
 
     if (result.output.isNotEmpty) {
-      final match = AdbRegex.adressLine.firstMatch(result.output.first);
+      final match = AdbRegex.addressLine.firstMatch(result.output.first);
       if (match == null && match!.groupCount != 2) {
         throw Exception('Address format exception');
       }
 
       return Address(interface: match.group(1)!, ip: match.group(2)!);
     }
+
+    return null;
   }
 
   Future<String> model(String deviceId) async {
-    return _runGuarded(Command.rawString(
-      'adb -s $deviceId shell getprop ro.product.model',
-    ));
+    return _runGuarded(
+      Command.rawString('adb -s $deviceId shell getprop ro.product.model'),
+    );
   }
 
   Future<String> manufacturer(String deviceId) {
-    return _runGuarded(Command.rawString(
-      'adb -s $deviceId shell getprop ro.product.manufacturer',
-    ));
+    return _runGuarded(
+      Command.rawString(
+        'adb -s $deviceId shell getprop ro.product.manufacturer',
+      ),
+    );
   }
 
   Future<String> serialNumber(String deviceId) {
-    return _runGuarded(Command.rawString(
-      'adb -s $deviceId shell getprop ro.serialno',
-    ));
+    return _runGuarded(
+      Command.rawString('adb -s $deviceId shell getprop ro.serialno'),
+    );
   }
 
   Future<String> androidVersion(String deviceId) {
-    return _runGuarded(Command.rawString(
-      'adb -s $deviceId shell getprop ro.build.version.release',
-    ));
+    return _runGuarded(
+      Command.rawString(
+        'adb -s $deviceId shell getprop ro.build.version.release',
+      ),
+    );
   }
 
   Future<String> apiLevel(String deviceId) {
-    return _runGuarded(Command.rawString(
-      'adb -s $deviceId shell getprop ro.build.version.sdk',
-    ));
+    return _runGuarded(
+      Command.rawString('adb -s $deviceId shell getprop ro.build.version.sdk'),
+    );
   }
 
   Future<String> _runGuarded(Command command) async {
@@ -235,11 +246,11 @@ class AdbException implements Exception {
 abstract class AdbRegex {
   static RegExp deviceId = RegExp(r'(.*?)\s+device');
 
-  static RegExp adressLine = RegExp(
+  static RegExp addressLine = RegExp(
     r'.*dev\s*(\S+)\s*.*\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b.*',
   );
 
-  static RegExp ipAdress = RegExp(
+  static RegExp ipAddress = RegExp(
     r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):(\d{1,5})',
   );
 }

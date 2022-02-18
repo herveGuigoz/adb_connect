@@ -10,9 +10,11 @@ final adbServiceProvider = StateNotifierProvider<AdbService, List<Device>>(
 final isDeviceConnectedProvider = Provider.family<bool, Device>((ref, it) {
   final other = ref.watch(adbServiceProvider);
   return it.isWifi ||
-      other.where((device) => device.isWifi).any((device) =>
-          device.serialNumber == it.serialNumber &&
-          device.address == it.address);
+      other.where((device) => device.isWifi).any(
+            (device) =>
+                device.serialNumber == it.serialNumber &&
+                device.address == it.address,
+          );
 });
 
 extension AdbActions on WidgetRef {
