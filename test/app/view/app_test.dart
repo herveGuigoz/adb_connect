@@ -1,4 +1,4 @@
-import 'package:adb_connect/app/app.dart';
+import 'package:adb_connect/modules/app/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

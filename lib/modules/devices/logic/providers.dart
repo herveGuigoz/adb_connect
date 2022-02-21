@@ -1,6 +1,5 @@
-import 'package:adb_connect/adb/models.dart';
-import 'package:adb_connect/adb/providers.dart';
 import 'package:adb_connect/modules/devices/logic/adb_service.dart';
+import 'package:adb_connect/services/adb/adb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final adbServiceProvider = StateNotifierProvider<AdbService, List<Device>>(

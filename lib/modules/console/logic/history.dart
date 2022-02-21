@@ -1,5 +1,5 @@
-import 'package:adb_connect/adb/adb.dart';
-import 'package:adb_connect/sandbox/models.dart';
+import 'package:adb_connect/services/adb/commands.dart';
+import 'package:adb_connect/services/sandbox/sandbox.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,6 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'models.freezed.dart';
+part of 'sandbox.dart';
 
 @freezed
 class Command with _$Command {

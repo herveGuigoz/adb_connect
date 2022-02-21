@@ -17,7 +17,6 @@ dependencies:
   google_fonts: ^2.1.0
   intl: ^0.17.0
   macos_ui: ^0.10.0
-  path_icon: ^0.7.0
 
 dev_dependencies:
   build_runner: ^2.1.4
@@ -31,3 +30,7 @@ flutter:
   generate: true
   assets:
     - assets/devices-lineup.png
+  fonts:
+    - family:  AdbConnectIcons
+      fonts:
+        - asset: assets/icons/AdbConnectIcons.ttf

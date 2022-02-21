@@ -1,6 +1,7 @@
-import 'package:adb_connect/adb/models.dart';
+import 'package:adb_connect/core/icons/icons.dart';
 import 'package:adb_connect/modules/devices/logic/providers.dart';
 import 'package:adb_connect/modules/devices/views/components/components.dart';
+import 'package:adb_connect/services/adb/adb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';
@@ -79,10 +80,16 @@ class DeviceListTile extends ConsumerWidget {
           children: [
             Expanded(
               child: MacosListTile(
-                leading: device.connectionType.when(
-                  none: () => const SizedBox(),
-                  usb: () => AppIcons.usbPlug,
-                  wifi: () => AppIcons.wifi,
+                leading: Container(
+                  constraints: BoxConstraints.tight(const Size.square(32)),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    device.connectionType.maybeWhen(
+                      wifi: () => AdbConnectIcon.wifi,
+                      orElse: () => AdbConnectIcon.usb,
+                    ),
+                    size: 18,
+                  ),
                 ),
                 title: Text(device.name),
                 subtitle: Text(device.subtitle),

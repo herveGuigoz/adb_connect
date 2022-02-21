@@ -1,5 +1,5 @@
 import 'package:adb_connect/modules/console/logic/history.dart';
-import 'package:adb_connect/sandbox/models.dart';
+import 'package:adb_connect/services/sandbox/sandbox.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final logsProvider = StateNotifierProvider<CommandHistory, List<LogEntry>>(

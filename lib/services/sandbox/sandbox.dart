@@ -3,10 +3,14 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer' as dev;
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:adb_connect/sandbox/models.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'models.dart';
+part 'sandbox.freezed.dart';
 
 const splitter = LineSplitter();
 
@@ -254,8 +258,7 @@ class Logger {
 
   void log(String message) {
     if (enabled) {
-      // ignore: avoid_print
-      print('[Sandbox][${DateTime.now()}] $message');
+      dev.log('[${DateTime.now()}] $message', name: 'Sandbox');
     }
   }
 }

@@ -1,6 +1,7 @@
-import 'package:adb_connect/app/providers.dart';
-import 'package:adb_connect/app/view/components/components.dart';
+import 'package:adb_connect/core/icons/icons.dart';
 import 'package:adb_connect/l10n/l10n.dart';
+import 'package:adb_connect/modules/app/providers.dart';
+import 'package:adb_connect/modules/app/view/components/components.dart';
 import 'package:adb_connect/modules/console/console.dart';
 import 'package:adb_connect/modules/devices/devices.dart';
 import 'package:flutter/cupertino.dart';
@@ -43,15 +44,15 @@ class MainLayout extends ConsumerWidget {
         titleBar: TitleBar(
           actions: [
             TitleBarAction(
-              semanticLabel: 'Restart ADB',
-              icon: const MacosIcon(CupertinoIcons.clear),
+              semanticLabel: 'Refresh',
+              icon: const MacosIcon(AdbConnectIcon.refresh),
+              onPressed: ref.loadDevices,
+            ),
+            TitleBarAction(
+              semanticLabel: 'Kill server',
+              icon: const MacosIcon(AdbConnectIcon.stop),
               onPressed: ref.restartAdb,
             ),
-            // TitleBarAction(
-            //   semanticLabel: 'Refresh',
-            //   icon: const MacosIcon(CupertinoIcons.refresh),
-            //   onPressed: ref.loadDevices,
-            // ),
           ],
         ),
         body: const DevicesLayout(),

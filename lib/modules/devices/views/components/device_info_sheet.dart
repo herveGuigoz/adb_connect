@@ -1,4 +1,4 @@
-import 'package:adb_connect/adb/models.dart';
+import 'package:adb_connect/services/adb/adb.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:macos_ui/macos_ui.dart';

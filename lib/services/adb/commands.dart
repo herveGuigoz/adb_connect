@@ -1,8 +1,7 @@
 import 'dart:async';
 
-import 'package:adb_connect/adb/models.dart';
-import 'package:adb_connect/sandbox/models.dart';
-import 'package:adb_connect/sandbox/sandbox.dart';
+import 'package:adb_connect/services/adb/models.dart';
+import 'package:adb_connect/services/sandbox/sandbox.dart';
 
 const adbDefaultPort = 5555;
 
