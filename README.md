@@ -1,6 +1,13 @@
 # Adb Connect
 
-MacOs application build with flutter that simplifies "adb over Wi-Fi" usage.
+MacOs application to quickly connect your Android device over WiFi.
+
+## Getting started
+
+Connect Android device and adb host computer to a common Wi-Fi network accessible to both.
+Connect your device to your computer using a USB cable.
+Press `Connect` button and a notification will pop up saying that the phone has been connected.
+Disconnect your USB once the application shows your device is connected.
 
 ---
 
@@ -27,3 +34,4 @@ see [create-dmg](https://github.com/create-dmg/create-dmg)
 ## Credits
 
 [ADB-Wi-Fi](https://github.com/y-polek/ADB-Wi-Fi)
+[adb-idea](https://github.com/pbreault/adb-idea)
