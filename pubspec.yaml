@@ -29,7 +29,7 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - assets/devices-lineup.png
+    - assets/images/devices-lineup.png
   fonts:
     - family:  AdbConnectIcons
       fonts:

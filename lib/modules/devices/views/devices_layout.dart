@@ -1,3 +1,4 @@
+import 'package:adb_connect/core/assets/assets.dart';
 import 'package:adb_connect/core/icons/icons.dart';
 import 'package:adb_connect/modules/devices/logic/providers.dart';
 import 'package:adb_connect/modules/devices/views/components/components.dart';
@@ -33,7 +34,7 @@ class _DeviceLayoutState extends ConsumerState<DevicesLayout> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/devices-lineup.png'),
+          Image.asset(Assets.devices),
           Text(
             'Connect a device via USB cable',
             style: theme.typography.caption1.copyWith(

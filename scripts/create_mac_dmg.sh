@@ -1,16 +1,14 @@
 #!/bin/sh
 test -f adb_connect.dmg && rm adb_connect.dmg
 create-dmg \
-  --volname "adb_connect Installer" \
-  --volicon "./assets/installer.icns" \
-  --background "./assets/dmg_background.png" \
+  --volname "AdbConnect Installer" \
+  --volicon "./assets/installer/dmg.icns" \
+  --background "./assets/installer/dmg_background.png" \
   --window-pos 200 120 \
-  --window-size 800 530 \
-  --icon-size 130 \
-  --text-size 14 \
-  --icon "adb_connect.app" 260 250 \
-  --hide-extension "adb_connect.app" \
-  --app-drop-link 540 250 \
-  --hdiutil-quiet \
-  "build/macos/Build/Products/Release/adb_connect.dmg" \
-  "build/macos/Build/Products/Release/adb_connect.app"
+  --window-size 800 400 \
+  --icon-size 100 \
+  --icon "AdbConnect.app" 200 190 \
+  --hide-extension "AdbConnect.app" \
+  --app-drop-link 600 185 \
+  "build/macos/Build/Products/Release/AdbConnect.dmg" \
+  "build/macos/Build/Products/Release/AdbConnect.app"
