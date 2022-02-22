@@ -37,7 +37,6 @@ class AdbService extends DevicesManager {
   AdbService(Adb adb) : super(adb);
 
   Future<void> loadDevices() async {
-    if (!adb.isRunning) await adb.init();
     state = await adb.devices();
     startPollingDevices();
   }

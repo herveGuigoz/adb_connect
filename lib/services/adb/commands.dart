@@ -2,79 +2,22 @@ import 'dart:async';
 
 import 'package:adb_connect/services/adb/models.dart';
 import 'package:adb_connect/services/sandbox/sandbox.dart';
+import 'package:flutter/foundation.dart';
 
 const adbDefaultPort = 5555;
 
-class Adb extends CommandExecutor with CommandsMixin {
+class Adb extends CommandExecutor {
   Adb({
-    int workersCount = 1,
+    int workersCount = 3,
     bool verbose = false,
     List<CommandsObserver> observers = const [],
-  })  : sandbox = Sanbox(workersCount: workersCount, verbose: verbose),
-        super(observers);
+  }) : super(workersCount, verbose: verbose, observers: observers);
 
-  final Sanbox sandbox;
-
-  bool get isRunning => sandbox.isRunning;
-  bool get isProcessing => sandbox.isProcessing;
-
-  Future<void> init() async {
-    await sandbox.start();
+  Future<bool> installed() async {
+    final result = await exec(Command.rawString('which adb'));
+    return result.exitCode == 0;
   }
 
-  @override
-  Future<CommandResult> exec(Command command) async {
-    late final CommandResult result;
-
-    try {
-      result = await sandbox.run(command);
-    } on RemoteExecutionError catch (error) {
-      result = CommandResult(exitCode: 1, output: [error.toString()]);
-    }
-
-    return result;
-  }
-
-  Future<void> dispose() async {
-    await sandbox.dispose();
-  }
-}
-
-abstract class CommandExecutor {
-  const CommandExecutor(this.observers);
-
-  final List<CommandsObserver> observers;
-
-  Future<CommandResult> exec(Command command);
-
-  Future<CommandResult> execAndLog(Command command) async {
-    for (final observer in observers) {
-      observer.didStart(LogEntry.command(value: command.stringify));
-    }
-
-    final result = await exec(command);
-
-    for (final observer in observers) {
-      observer.didRun(
-        result.exitCode > 0
-            ? LogEntry.stderr(value: result.stringify)
-            : LogEntry.stdout(value: result.stringify),
-      );
-    }
-
-    return result;
-  }
-}
-
-abstract class CommandsObserver {
-  const CommandsObserver();
-
-  void didStart(LogEntry entry) {}
-
-  void didRun(LogEntry entry) {}
-}
-
-mixin CommandsMixin on CommandExecutor {
   Future<CommandResult> connect(Device device) async {
     if (device.isUsb) {
       await execAndLog(
@@ -114,10 +57,6 @@ mixin CommandsMixin on CommandExecutor {
     final devices = <Device>[];
     final command = Command.rawString('adb devices');
     final devicesResult = await exec(command);
-
-    // if (devicesResult.exitCode > 0) {
-    //   throw AdbException(command, devicesResult);
-    // }
 
     final devicesIds = devicesResult.output
         .sublist(1)
@@ -224,6 +163,67 @@ mixin CommandsMixin on CommandExecutor {
 
     return result.output.first;
   }
+}
+
+abstract class CommandExecutor {
+  CommandExecutor(
+    int workersCount, {
+    bool verbose = false,
+    this.observers = const [],
+  }) : _sandbox = Sanbox(workersCount: workersCount, verbose: verbose);
+
+  final Sanbox _sandbox;
+
+  final List<CommandsObserver> observers;
+
+  bool get isRunning => _sandbox.isRunning;
+  bool get isProcessing => _sandbox.isProcessing;
+
+  @protected
+  Future<CommandResult> exec(Command command) async {
+    if (!isRunning) await _sandbox.start();
+
+    late final CommandResult result;
+
+    try {
+      result = await _sandbox.run(command);
+    } on RemoteExecutionError catch (error) {
+      result = CommandResult(exitCode: 1, output: [error.toString()]);
+    }
+
+    return result;
+  }
+
+  @protected
+  Future<CommandResult> execAndLog(Command command) async {
+    for (final observer in observers) {
+      observer.didStart(LogEntry.command(value: command.stringify));
+    }
+
+    final result = await exec(command);
+
+    for (final observer in observers) {
+      observer.didRun(
+        result.exitCode > 0
+            ? LogEntry.stderr(value: result.stringify)
+            : LogEntry.stdout(value: result.stringify),
+      );
+    }
+
+    return result;
+  }
+
+  Future<void> dispose() async {
+    await _sandbox.dispose();
+  }
+}
+
+abstract class CommandsObserver {
+  const CommandsObserver();
+
+  void didStart(LogEntry entry) {}
+
+  void didRun(LogEntry entry) {}
 }
 
 class AdbException implements Exception {
