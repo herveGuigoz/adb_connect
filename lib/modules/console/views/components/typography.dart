@@ -29,7 +29,7 @@ class Log extends StatelessWidget {
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       style: GoogleFonts.ibmPlexMono().copyWith(
-        fontSize: 12,
+        fontSize: 10,
         color: MacosTheme.of(context).primaryColor,
       ),
     );

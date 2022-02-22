@@ -25,7 +25,7 @@ class Adb extends CommandExecutor {
       );
 
       // wait to avoid `connection refused` error
-      await Future.delayed(const Duration(seconds: 2), () {});
+      await Future.delayed(const Duration(seconds: 1), () {});
     }
 
     assert(device.address != null, 'Could not connect device, ip is unknown');
@@ -152,6 +152,17 @@ class Adb extends CommandExecutor {
     return _runGuarded(
       Command.rawString('adb -s $deviceId shell getprop ro.build.version.sdk'),
     );
+  }
+
+  Future<String?> batteryLevel(String deviceId) async {
+    final regex = RegExp(r'(?<=[l|L]evel:[\s]?)[0-9\.]*');
+    final result = await exec(
+      Command.rawString('adb -s $deviceId shell dumpsys battery'),
+    );
+    for (final raw in result.output) {
+      if (regex.hasMatch(raw)) return raw;
+    }
+    return null;
   }
 
   Future<String> _runGuarded(Command command) async {

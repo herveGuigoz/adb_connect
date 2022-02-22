@@ -23,6 +23,10 @@ class _LogsLayoutState extends ConsumerState<LogsLayout> {
   @override
   Widget build(BuildContext context) {
     final logs = ref.watch(logsProvider);
+    // Scroll to bottom after each build.
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      controller.jumpTo(controller.position.maxScrollExtent);
+    });
 
     return ContextMenuRegion(
       onItemSelected: (item) => item.onSelected?.call(),

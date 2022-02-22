@@ -28,7 +28,7 @@ enum WorkerStatus { idle, processing }
 
 /// Class, that provides `compute` like API for concurrent commands run
 class Sanbox {
-  Sanbox({this.workersCount = 2, bool verbose = false})
+  Sanbox({this.workersCount = 1, bool verbose = false})
       : assert(workersCount > 0, 'Missing worker count'),
         logger = Logger(enabled: verbose);
 
