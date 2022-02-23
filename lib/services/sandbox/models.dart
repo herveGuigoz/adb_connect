@@ -20,27 +20,24 @@ class Command with _$Command {
 
 @freezed
 class CommandResult with _$CommandResult {
-  const factory CommandResult({
+   const CommandResult._();
+   
+  const factory CommandResult.success({
     required int exitCode,
     required List<String> output,
-  }) = _CommandResult;
+  }) = CommandSucceed;
 
-  const CommandResult._();
+  const factory CommandResult.error({
+    required int exitCode,
+    required List<String> output,
+  }) = CommandError;
 
   String get stringify => output.isEmpty ? '' : output.join(r'\n');
 }
 
 @freezed
 class LogEntry with _$LogEntry {
-  const factory LogEntry.command({
-    required String value,
-  }) = _CommandLogEntry;
-
-  const factory LogEntry.stderr({
-    required String value,
-  }) = _StdrLogEntry;
-
-  const factory LogEntry.stdout({
-    required String value,
-  }) = _StdoutLogEntry;
+  const factory LogEntry.command({required String value}) = _CommandLogEntry;
+  const factory LogEntry.stderr({required String value}) = _StdrLogEntry;
+  const factory LogEntry.stdout({required String value}) = _StdoutLogEntry;
 }

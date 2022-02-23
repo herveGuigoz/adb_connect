@@ -161,8 +161,16 @@ abstract class _Command extends Command {
 class _$CommandResultTearOff {
   const _$CommandResultTearOff();
 
-  _CommandResult call({required int exitCode, required List<String> output}) {
-    return _CommandResult(
+  CommandSucceed success(
+      {required int exitCode, required List<String> output}) {
+    return CommandSucceed(
+      exitCode: exitCode,
+      output: output,
+    );
+  }
+
+  CommandError error({required int exitCode, required List<String> output}) {
+    return CommandError(
       exitCode: exitCode,
       output: output,
     );
@@ -176,6 +184,45 @@ const $CommandResult = _$CommandResultTearOff();
 mixin _$CommandResult {
   int get exitCode => throw _privateConstructorUsedError;
   List<String> get output => throw _privateConstructorUsedError;
+
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int exitCode, List<String> output) success,
+    required TResult Function(int exitCode, List<String> output) error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(int exitCode, List<String> output)? success,
+    TResult Function(int exitCode, List<String> output)? error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int exitCode, List<String> output)? success,
+    TResult Function(int exitCode, List<String> output)? error,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(CommandSucceed value) success,
+    required TResult Function(CommandError value) error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(CommandSucceed value)? success,
+    TResult Function(CommandError value)? error,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(CommandSucceed value)? success,
+    TResult Function(CommandError value)? error,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CommandResultCopyWith<CommandResult> get copyWith =>
@@ -218,32 +265,32 @@ class _$CommandResultCopyWithImpl<$Res>
 }
 
 /// @nodoc
-abstract class _$CommandResultCopyWith<$Res>
+abstract class $CommandSucceedCopyWith<$Res>
     implements $CommandResultCopyWith<$Res> {
-  factory _$CommandResultCopyWith(
-          _CommandResult value, $Res Function(_CommandResult) then) =
-      __$CommandResultCopyWithImpl<$Res>;
+  factory $CommandSucceedCopyWith(
+          CommandSucceed value, $Res Function(CommandSucceed) then) =
+      _$CommandSucceedCopyWithImpl<$Res>;
   @override
   $Res call({int exitCode, List<String> output});
 }
 
 /// @nodoc
-class __$CommandResultCopyWithImpl<$Res>
+class _$CommandSucceedCopyWithImpl<$Res>
     extends _$CommandResultCopyWithImpl<$Res>
-    implements _$CommandResultCopyWith<$Res> {
-  __$CommandResultCopyWithImpl(
-      _CommandResult _value, $Res Function(_CommandResult) _then)
-      : super(_value, (v) => _then(v as _CommandResult));
+    implements $CommandSucceedCopyWith<$Res> {
+  _$CommandSucceedCopyWithImpl(
+      CommandSucceed _value, $Res Function(CommandSucceed) _then)
+      : super(_value, (v) => _then(v as CommandSucceed));
 
   @override
-  _CommandResult get _value => super._value as _CommandResult;
+  CommandSucceed get _value => super._value as CommandSucceed;
 
   @override
   $Res call({
     Object? exitCode = freezed,
     Object? output = freezed,
   }) {
-    return _then(_CommandResult(
+    return _then(CommandSucceed(
       exitCode: exitCode == freezed
           ? _value.exitCode
           : exitCode // ignore: cast_nullable_to_non_nullable
@@ -258,8 +305,8 @@ class __$CommandResultCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_CommandResult extends _CommandResult {
-  const _$_CommandResult({required this.exitCode, required this.output})
+class _$CommandSucceed extends CommandSucceed {
+  const _$CommandSucceed({required this.exitCode, required this.output})
       : super._();
 
   @override
@@ -269,14 +316,14 @@ class _$_CommandResult extends _CommandResult {
 
   @override
   String toString() {
-    return 'CommandResult(exitCode: $exitCode, output: $output)';
+    return 'CommandResult.success(exitCode: $exitCode, output: $output)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _CommandResult &&
+            other is CommandSucceed &&
             (identical(other.exitCode, exitCode) ||
                 other.exitCode == exitCode) &&
             const DeepCollectionEquality().equals(other.output, output));
@@ -288,14 +335,76 @@ class _$_CommandResult extends _CommandResult {
 
   @JsonKey(ignore: true)
   @override
-  _$CommandResultCopyWith<_CommandResult> get copyWith =>
-      __$CommandResultCopyWithImpl<_CommandResult>(this, _$identity);
+  $CommandSucceedCopyWith<CommandSucceed> get copyWith =>
+      _$CommandSucceedCopyWithImpl<CommandSucceed>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int exitCode, List<String> output) success,
+    required TResult Function(int exitCode, List<String> output) error,
+  }) {
+    return success(exitCode, output);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(int exitCode, List<String> output)? success,
+    TResult Function(int exitCode, List<String> output)? error,
+  }) {
+    return success?.call(exitCode, output);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int exitCode, List<String> output)? success,
+    TResult Function(int exitCode, List<String> output)? error,
+    required TResult orElse(),
+  }) {
+    if (success != null) {
+      return success(exitCode, output);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(CommandSucceed value) success,
+    required TResult Function(CommandError value) error,
+  }) {
+    return success(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(CommandSucceed value)? success,
+    TResult Function(CommandError value)? error,
+  }) {
+    return success?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(CommandSucceed value)? success,
+    TResult Function(CommandError value)? error,
+    required TResult orElse(),
+  }) {
+    if (success != null) {
+      return success(this);
+    }
+    return orElse();
+  }
 }
 
-abstract class _CommandResult extends CommandResult {
-  const factory _CommandResult(
-      {required int exitCode, required List<String> output}) = _$_CommandResult;
-  const _CommandResult._() : super._();
+abstract class CommandSucceed extends CommandResult {
+  const factory CommandSucceed(
+      {required int exitCode, required List<String> output}) = _$CommandSucceed;
+  const CommandSucceed._() : super._();
 
   @override
   int get exitCode;
@@ -303,7 +412,158 @@ abstract class _CommandResult extends CommandResult {
   List<String> get output;
   @override
   @JsonKey(ignore: true)
-  _$CommandResultCopyWith<_CommandResult> get copyWith =>
+  $CommandSucceedCopyWith<CommandSucceed> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $CommandErrorCopyWith<$Res>
+    implements $CommandResultCopyWith<$Res> {
+  factory $CommandErrorCopyWith(
+          CommandError value, $Res Function(CommandError) then) =
+      _$CommandErrorCopyWithImpl<$Res>;
+  @override
+  $Res call({int exitCode, List<String> output});
+}
+
+/// @nodoc
+class _$CommandErrorCopyWithImpl<$Res> extends _$CommandResultCopyWithImpl<$Res>
+    implements $CommandErrorCopyWith<$Res> {
+  _$CommandErrorCopyWithImpl(
+      CommandError _value, $Res Function(CommandError) _then)
+      : super(_value, (v) => _then(v as CommandError));
+
+  @override
+  CommandError get _value => super._value as CommandError;
+
+  @override
+  $Res call({
+    Object? exitCode = freezed,
+    Object? output = freezed,
+  }) {
+    return _then(CommandError(
+      exitCode: exitCode == freezed
+          ? _value.exitCode
+          : exitCode // ignore: cast_nullable_to_non_nullable
+              as int,
+      output: output == freezed
+          ? _value.output
+          : output // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$CommandError extends CommandError {
+  const _$CommandError({required this.exitCode, required this.output})
+      : super._();
+
+  @override
+  final int exitCode;
+  @override
+  final List<String> output;
+
+  @override
+  String toString() {
+    return 'CommandResult.error(exitCode: $exitCode, output: $output)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is CommandError &&
+            (identical(other.exitCode, exitCode) ||
+                other.exitCode == exitCode) &&
+            const DeepCollectionEquality().equals(other.output, output));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, exitCode, const DeepCollectionEquality().hash(output));
+
+  @JsonKey(ignore: true)
+  @override
+  $CommandErrorCopyWith<CommandError> get copyWith =>
+      _$CommandErrorCopyWithImpl<CommandError>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int exitCode, List<String> output) success,
+    required TResult Function(int exitCode, List<String> output) error,
+  }) {
+    return error(exitCode, output);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult Function(int exitCode, List<String> output)? success,
+    TResult Function(int exitCode, List<String> output)? error,
+  }) {
+    return error?.call(exitCode, output);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int exitCode, List<String> output)? success,
+    TResult Function(int exitCode, List<String> output)? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(exitCode, output);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(CommandSucceed value) success,
+    required TResult Function(CommandError value) error,
+  }) {
+    return error(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult Function(CommandSucceed value)? success,
+    TResult Function(CommandError value)? error,
+  }) {
+    return error?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(CommandSucceed value)? success,
+    TResult Function(CommandError value)? error,
+    required TResult orElse(),
+  }) {
+    if (error != null) {
+      return error(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class CommandError extends CommandResult {
+  const factory CommandError(
+      {required int exitCode, required List<String> output}) = _$CommandError;
+  const CommandError._() : super._();
+
+  @override
+  int get exitCode;
+  @override
+  List<String> get output;
+  @override
+  @JsonKey(ignore: true)
+  $CommandErrorCopyWith<CommandError> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

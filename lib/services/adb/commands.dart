@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:adb_connect/services/adb/adb.dart';
 import 'package:adb_connect/services/adb/models.dart';
 import 'package:adb_connect/services/sandbox/sandbox.dart';
 import 'package:flutter/foundation.dart';
@@ -8,14 +9,14 @@ const adbDefaultPort = 5555;
 
 class Adb extends CommandExecutor {
   Adb({
-    int workersCount = 3,
+    int workersCount = 5,
     bool verbose = false,
     List<CommandsObserver> observers = const [],
   }) : super(workersCount, verbose: verbose, observers: observers);
 
   Future<bool> installed() async {
     final result = await exec(Command.rawString('which adb'));
-    return result.exitCode == 0;
+    return result is CommandSucceed;
   }
 
   Future<CommandResult> connect(Device device) async {
@@ -25,14 +26,14 @@ class Adb extends CommandExecutor {
       );
 
       // wait to avoid `connection refused` error
-      await Future.delayed(const Duration(seconds: 1), () {});
+      await Future.delayed(const Duration(milliseconds: 500), () {});
+
+      return execAndLog(
+        Command.rawString('adb connect ${device.address!.ip}:${device.port}'),
+      );
     }
 
-    assert(device.address != null, 'Could not connect device, ip is unknown');
-
-    return execAndLog(
-      Command.rawString('adb connect ${device.address!.ip}:${device.port}'),
-    );
+    throw Exception('Device is not connected over USB');
   }
 
   Future<CommandResult> disconnect(Device device) {
@@ -110,11 +111,9 @@ class Adb extends CommandExecutor {
 
     if (result.output.isNotEmpty) {
       final match = AdbRegex.addressLine.firstMatch(result.output.first);
-      if (match == null && match!.groupCount != 2) {
-        throw Exception('Address format exception');
+      if (match != null && match.groupCount == 2) {
+        return Address(interface: match.group(1)!, ip: match.group(2)!);
       }
-
-      return Address(interface: match.group(1)!, ip: match.group(2)!);
     }
 
     return null;
@@ -199,7 +198,7 @@ abstract class CommandExecutor {
     try {
       result = await _sandbox.run(command);
     } on RemoteExecutionError catch (error) {
-      result = CommandResult(exitCode: 1, output: [error.toString()]);
+      result = CommandResult.error(exitCode: 1, output: [error.toString()]);
     }
 
     return result;
@@ -215,9 +214,10 @@ abstract class CommandExecutor {
 
     for (final observer in observers) {
       observer.didRun(
-        result.exitCode > 0
-            ? LogEntry.stderr(value: result.stringify)
-            : LogEntry.stdout(value: result.stringify),
+        result.map(
+          success: (_) => LogEntry.stderr(value: result.stringify),
+          error: (_) => LogEntry.stdout(value: result.stringify),
+        ),
       );
     }
 
@@ -245,11 +245,7 @@ class AdbException implements Exception {
 
   @override
   String toString() {
-    return 'AdbException( '
-        'command: $command '
-        'exitCode: ${result.exitCode}, '
-        'output: ${result.output}, '
-        ')';
+    return 'AdbException(command: $command, output: ${result.stringify})';
   }
 }
 

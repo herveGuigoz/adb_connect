@@ -43,11 +43,11 @@ class MainLayout extends ConsumerWidget {
       data: (_) => AppScaffold(
         titleBar: TitleBar(
           actions: [
-            TitleBarAction(
-              semanticLabel: 'Refresh',
-              icon: const MacosIcon(AdbConnectIcon.refresh),
-              onPressed: ref.loadDevices,
-            ),
+            // TitleBarAction(
+            //   semanticLabel: 'Refresh',
+            //   icon: const MacosIcon(AdbConnectIcon.refresh),
+            //   onPressed: ref.loadDevices,
+            // ),
             TitleBarAction(
               semanticLabel: 'Kill server',
               icon: const MacosIcon(AdbConnectIcon.stop),
