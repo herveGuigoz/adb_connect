@@ -28,7 +28,7 @@ enum WorkerStatus { idle, processing }
 
 /// Class, that provides `compute` like API for concurrent commands run
 class Sanbox {
-  Sanbox({this.workersCount = 2, bool verbose = false})
+  Sanbox({this.workersCount = 1, bool verbose = false})
       : assert(workersCount > 0, 'Missing worker count'),
         logger = Logger(enabled: verbose);
 
@@ -192,18 +192,50 @@ class Worker {
   }
 }
 
+@immutable
 class Task {
-  Task({required this.command, required this.capability});
+  const Task({required this.command, required this.capability});
 
   final Command command;
   final Capability capability;
+
+  @override
+  String toString() => 'Task(command: $command, capability: $capability)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Task &&
+        other.command == command &&
+        other.capability == capability;
+  }
+
+  @override
+  int get hashCode => command.hashCode ^ capability.hashCode;
 }
 
+@immutable
 class TaskResult {
-  TaskResult({required this.result, required this.capability});
+  const TaskResult({required this.result, required this.capability});
 
   final CommandResult result;
   final Capability capability;
+
+  @override
+  String toString() => 'TaskResult(result: $result, capability: $capability)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TaskResult &&
+        other.result == result &&
+        other.capability == capability;
+  }
+
+  @override
+  int get hashCode => result.hashCode ^ capability.hashCode;
 }
 
 class IsolateInitParams {
@@ -239,8 +271,11 @@ Future<void> isolateEntryPoint(IsolateInitParams params) async {
         }
       }
 
+      final exitCode = processResult.exitCode;
       final result = TaskResult(
-        result: CommandResult(exitCode: processResult.exitCode, output: output),
+        result: processResult.exitCode == 0
+            ? CommandResult.success(exitCode: exitCode, output: output)
+            : CommandResult.error(exitCode: exitCode, output: output),
         capability: task.capability,
       );
 

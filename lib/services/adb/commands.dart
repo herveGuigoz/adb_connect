@@ -1,80 +1,24 @@
 import 'dart:async';
 
+import 'package:adb_connect/services/adb/adb.dart';
 import 'package:adb_connect/services/adb/models.dart';
 import 'package:adb_connect/services/sandbox/sandbox.dart';
+import 'package:flutter/foundation.dart';
 
 const adbDefaultPort = 5555;
 
-class Adb extends CommandExecutor with CommandsMixin {
+class Adb extends CommandExecutor {
   Adb({
-    int workersCount = 1,
+    int workersCount = 5,
     bool verbose = false,
     List<CommandsObserver> observers = const [],
-  })  : sandbox = Sanbox(workersCount: workersCount, verbose: verbose),
-        super(observers);
+  }) : super(workersCount, verbose: verbose, observers: observers);
 
-  final Sanbox sandbox;
-
-  bool get isRunning => sandbox.isRunning;
-  bool get isProcessing => sandbox.isProcessing;
-
-  Future<void> init() async {
-    await sandbox.start();
+  Future<bool> installed() async {
+    final result = await exec(Command.rawString('which adb'));
+    return result is CommandSucceed;
   }
 
-  @override
-  Future<CommandResult> exec(Command command) async {
-    late final CommandResult result;
-
-    try {
-      result = await sandbox.run(command);
-    } on RemoteExecutionError catch (error) {
-      result = CommandResult(exitCode: 1, output: [error.toString()]);
-    }
-
-    return result;
-  }
-
-  Future<void> dispose() async {
-    await sandbox.dispose();
-  }
-}
-
-abstract class CommandExecutor {
-  const CommandExecutor(this.observers);
-
-  final List<CommandsObserver> observers;
-
-  Future<CommandResult> exec(Command command);
-
-  Future<CommandResult> execAndLog(Command command) async {
-    for (final observer in observers) {
-      observer.didStart(LogEntry.command(value: command.stringify));
-    }
-
-    final result = await exec(command);
-
-    for (final observer in observers) {
-      observer.didRun(
-        result.exitCode > 0
-            ? LogEntry.stderr(value: result.stringify)
-            : LogEntry.stdout(value: result.stringify),
-      );
-    }
-
-    return result;
-  }
-}
-
-abstract class CommandsObserver {
-  const CommandsObserver();
-
-  void didStart(LogEntry entry) {}
-
-  void didRun(LogEntry entry) {}
-}
-
-mixin CommandsMixin on CommandExecutor {
   Future<CommandResult> connect(Device device) async {
     if (device.isUsb) {
       await execAndLog(
@@ -82,14 +26,14 @@ mixin CommandsMixin on CommandExecutor {
       );
 
       // wait to avoid `connection refused` error
-      await Future.delayed(const Duration(seconds: 2), () {});
+      await Future.delayed(const Duration(milliseconds: 500), () {});
+
+      return execAndLog(
+        Command.rawString('adb connect ${device.address!.ip}:${device.port}'),
+      );
     }
 
-    assert(device.address != null, 'Could not connect device, ip is unknown');
-
-    return execAndLog(
-      Command.rawString('adb connect ${device.address!.ip}:${device.port}'),
-    );
+    throw Exception('Device is not connected over USB');
   }
 
   Future<CommandResult> disconnect(Device device) {
@@ -114,10 +58,6 @@ mixin CommandsMixin on CommandExecutor {
     final devices = <Device>[];
     final command = Command.rawString('adb devices');
     final devicesResult = await exec(command);
-
-    // if (devicesResult.exitCode > 0) {
-    //   throw AdbException(command, devicesResult);
-    // }
 
     final devicesIds = devicesResult.output
         .sublist(1)
@@ -171,11 +111,9 @@ mixin CommandsMixin on CommandExecutor {
 
     if (result.output.isNotEmpty) {
       final match = AdbRegex.addressLine.firstMatch(result.output.first);
-      if (match == null && match!.groupCount != 2) {
-        throw Exception('Address format exception');
+      if (match != null && match.groupCount == 2) {
+        return Address(interface: match.group(1)!, ip: match.group(2)!);
       }
-
-      return Address(interface: match.group(1)!, ip: match.group(2)!);
     }
 
     return null;
@@ -215,6 +153,17 @@ mixin CommandsMixin on CommandExecutor {
     );
   }
 
+  Future<String?> batteryLevel(String deviceId) async {
+    final regex = RegExp(r'(?<=[l|L]evel:[\s]?)[0-9\.]*');
+    final result = await exec(
+      Command.rawString('adb -s $deviceId shell dumpsys battery'),
+    );
+    for (final raw in result.output) {
+      if (regex.hasMatch(raw)) return raw;
+    }
+    return null;
+  }
+
   Future<String> _runGuarded(Command command) async {
     final result = await exec(command);
 
@@ -226,6 +175,68 @@ mixin CommandsMixin on CommandExecutor {
   }
 }
 
+abstract class CommandExecutor {
+  CommandExecutor(
+    int workersCount, {
+    bool verbose = false,
+    this.observers = const [],
+  }) : _sandbox = Sanbox(workersCount: workersCount, verbose: verbose);
+
+  final Sanbox _sandbox;
+
+  final List<CommandsObserver> observers;
+
+  bool get isRunning => _sandbox.isRunning;
+  bool get isProcessing => _sandbox.isProcessing;
+
+  @protected
+  Future<CommandResult> exec(Command command) async {
+    if (!isRunning) await _sandbox.start();
+
+    late final CommandResult result;
+
+    try {
+      result = await _sandbox.run(command);
+    } on RemoteExecutionError catch (error) {
+      result = CommandResult.error(exitCode: 1, output: [error.toString()]);
+    }
+
+    return result;
+  }
+
+  @protected
+  Future<CommandResult> execAndLog(Command command) async {
+    for (final observer in observers) {
+      observer.didStart(LogEntry.command(value: command.stringify));
+    }
+
+    final result = await exec(command);
+
+    for (final observer in observers) {
+      observer.didRun(
+        result.map(
+          success: (_) => LogEntry.stderr(value: result.stringify),
+          error: (_) => LogEntry.stdout(value: result.stringify),
+        ),
+      );
+    }
+
+    return result;
+  }
+
+  Future<void> dispose() async {
+    await _sandbox.dispose();
+  }
+}
+
+abstract class CommandsObserver {
+  const CommandsObserver();
+
+  void didStart(LogEntry entry) {}
+
+  void didRun(LogEntry entry) {}
+}
+
 class AdbException implements Exception {
   AdbException(this.command, this.result);
 
@@ -234,11 +245,7 @@ class AdbException implements Exception {
 
   @override
   String toString() {
-    return 'AdbException( '
-        'command: $command '
-        'exitCode: ${result.exitCode}, '
-        'output: ${result.output}, '
-        ')';
+    return 'AdbException(command: $command, output: ${result.stringify})';
   }
 }
 

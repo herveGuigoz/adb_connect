@@ -1,6 +1,7 @@
+import 'package:adb_connect/core/assets/assets.dart';
 import 'package:adb_connect/core/icons/icons.dart';
 import 'package:adb_connect/modules/devices/logic/providers.dart';
-import 'package:adb_connect/modules/devices/views/components/components.dart';
+import 'package:adb_connect/modules/devices/views/devices_info.dart';
 import 'package:adb_connect/services/adb/adb.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,7 +34,7 @@ class _DeviceLayoutState extends ConsumerState<DevicesLayout> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/devices-lineup.png'),
+          Image.asset(Assets.devices),
           Text(
             'Connect a device via USB cable',
             style: theme.typography.caption1.copyWith(
@@ -69,10 +70,11 @@ class DeviceListTile extends ConsumerWidget {
     return ContextMenuRegion(
       onItemSelected: (item) => item.onSelected?.call(),
       menuItems: [
-        MenuItem(
-          title: 'Info',
-          onSelected: () => DeviceInfoSheet.show(context, device: device),
-        ),
+        if (device.isWifi)
+          MenuItem(
+            title: 'Info',
+            onSelected: () => DeviceInfoSheet.show(context, device: device),
+          ),
       ],
       child: Padding(
         padding: const EdgeInsets.all(16),
